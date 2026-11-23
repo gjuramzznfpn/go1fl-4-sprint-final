@@ -13,8 +13,10 @@ const (
 
 func parsePackage(data string) (int, time.Duration, error) {
 	// TODO: реализовать функцию
+	return 0, 0, nil
 }
 
 func DayActionInfo(data string, weight, height float64) string {
 	// TODO: реализовать функцию
+	return ""
 }
