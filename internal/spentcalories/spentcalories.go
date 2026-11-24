@@ -1,6 +1,7 @@
 package spentcalories
 
 import (
+	"errors"
 	"time"
 )
 
@@ -36,8 +37,23 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 }
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
-	// TODO: реализовать функцию
-	return 0, nil
+	if steps <= 0 {
+		return 0, errors.New("Колличество шагов должно быть больше 0")
+	}
+
+	if weight <= 0 {
+		return 0, errors.New("Вес должен быть больше 0")
+	}
+
+	if height <= 0 {
+		return 0, errors.New("Рост должен быть больше 0")
+	}
+
+	if duration <= 0 {
+		return 0, errors.New("Продолжительность должна быть больше 0")
+	}
+
+	return (weight * meanSpeed(steps, height, duration) * duration.Minutes()) / minInH, nil
 }
 
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
