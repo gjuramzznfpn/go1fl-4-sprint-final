@@ -2,6 +2,8 @@ package spentcalories
 
 import (
 	"errors"
+	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -59,8 +61,37 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 }
 
 func TrainingInfo(data string, weight, height float64) (string, error) {
-	// TODO: реализовать функцию
-	return "", nil
+	steps, activity, duration, err := parseTraining(data)
+
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+
+	var calories float64
+
+	switch activity {
+	case "Бег":
+		calories, err = RunningSpentCalories(steps, weight, height, duration)
+		if err != nil {
+			log.Println(err)
+			return "", err
+		}
+	case "Ходьба":
+		calories, err = WalkingSpentCalories(steps, weight, height, duration)
+		if err != nil {
+			log.Println(err)
+			return "", err
+		}
+	default:
+		err := errors.New("неизвестный тип тренировки")
+		log.Println(err)
+		return "", err
+	}
+
+	output := fmt.Sprintf("Тип тренировки: %v\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", activity, duration.Hours(), distance(steps, height), meanSpeed(steps, height, duration), calories)
+
+	return output, nil
 }
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
